@@ -1,0 +1,27 @@
+version: "3"
+services:
+  spark-master:
+    image: "spark_master:latest"
+    ports:
+      - "8080:8080"
+    networks:
+      - spark-net
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role==master
+  spark-worker:
+    image: "spark_worker:latest"
+    ports:
+      - "8081:8081"
+    environment:
+      - CORES=3
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role==worker
+    networks:
+      - spark-net
+networks:
+  spark-net:
+    driver: overlay

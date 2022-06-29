@@ -1,0 +1,28 @@
+# based on tutorial https://github.com/sdesilva26/docker-spark/blob/master/docker/docker-compose.yml
+FROM debian:stable
+
+RUN apt-get update \
+  && apt-get install -y vim curl unzip \
+  && apt-get install -y python3 python3-setuptools \
+  && ln -s /usr/bin/python3 /usr/bin/python \
+  && apt-get install -y python3-pip \
+  && apt-get install -y openjdk-11-jre \
+  && apt-get install -y docker.io
+
+# spark-3.3.0-bin-hadoop3.tgz
+ENV SPARK_VERSION=3.3.0
+ENV HADOOP_VERSION=3
+ENV SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
+ENV SPARK_HOME=/usr/spark-${SPARK_VERSION}
+ENV PATH=$PATH:${SPARK_HOME}/bin
+ENV DAEMON_RUN=true
+RUN curl -sL --retry 3 \
+  "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
+  | gunzip \
+  | tar x -C /usr/ \
+  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
+  && chown -R root:root $SPARK_HOME
+
+RUN pip3 install pyspark
+
+WORKDIR $SPARK_HOME
