@@ -3,7 +3,7 @@ FROM spark_base
 ENV MASTER_CONTAINER_NAME=spark-master
 ENV SPARK_EXECUTOR_CORES=3
 
-RUN pip3 install pandas numpy matplotlib 
+# RUN pip3 install pandas numpy matplotlib 
 # pyarrow koalas
 
 EXPOSE 4040 8888
