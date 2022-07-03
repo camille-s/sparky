@@ -7,5 +7,5 @@ ENV SPARK_WORKER_LOG=/spark/logs
 
 EXPOSE 8081
 
-ENTRYPOINT ["$SPARK_HOME/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "-c $CORES", "spark://$MASTER_CONTAINER_NAME:7077"]
+ENTRYPOINT $SPARK_HOME/bin/spark-class org.apache.spark.deploy.worker.Worker -c $CORES spark://$MASTER_CONTAINER_NAME:7077
 
