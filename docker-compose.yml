@@ -1,7 +1,7 @@
 version: "3"
 services:
   spark-master:
-    image: "spark_master:latest"
+    image: "spark-master:latest"
     ports:
       - "8080:8080"
     networks:
@@ -9,17 +9,18 @@ services:
     deploy:
       placement:
         constraints:
-          - node.labels.role==master
+          - node.labels.role==manager
   spark-worker:
-    image: "spark_worker:latest"
+    image: "spark-worker:latest"
     ports:
       - "8081:8081"
     environment:
-      - CORES=3
+      - CORES=7
     deploy:
       placement:
         constraints:
           - node.labels.role==worker
+      replicas: 3
     networks:
       - spark-net
 networks:
