@@ -2,7 +2,7 @@
 FROM debian:stable
 
 RUN apt-get update \
-  && apt-get install -y vim curl unzip \
+  && apt-get install -y vim curl unzip openssl \
   && apt-get install -y python3 python3-setuptools \
   && ln -s /usr/bin/python3 /usr/bin/python \
   && apt-get install -y python3-pip \
