@@ -4,7 +4,7 @@ ENV SPARK_MASTER_PORT=7077
 ENV SPARK_MASTER_WEBUI_PORT=8080
 ENV SPARK_MASTER_LOG=/spark/logs
 
-EXPOSE 8080
+EXPOSE 4040 8080
 
-# ENTRYPOINT $SPARK_HOME/bin/spark-class org.apache.spark.deploy.master.Master
-ENTRYPOINT $SPARK_HOME/sbin/start-master.sh
+ENTRYPOINT $SPARK_HOME/bin/spark-class org.apache.spark.deploy.master.Master
+# ENTRYPOINT $SPARK_HOME/sbin/start-master.sh
