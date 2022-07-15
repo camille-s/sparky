@@ -6,6 +6,6 @@ ENV MASTER_CONTAINER_NAME=spark-master
 # RUN pip3 install pandas numpy matplotlib 
 # pyarrow koalas
 
-EXPOSE 4040 8888
+EXPOSE 18080 8888
 
 WORKDIR /home/
