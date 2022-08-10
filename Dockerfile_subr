@@ -1,0 +1,61 @@
+FROM spark-base AS r_img
+
+ENV MASTER_CONTAINER_NAME=spark-master
+ENV R_VERSION=4.2.1
+
+# Make R from source
+RUN apt-get update && apt-get install --yes \
+	wget \
+	libreadline-dev \
+	gnupg2 \
+	make \
+	libatlas3-base \
+	libopenblas-base \
+	gfortran \
+	libcurl4-openssl-dev \
+	libssl-dev \
+	libxml2-dev \
+	libicu-dev \
+	libx11-dev \
+	libxt-dev \
+	libbz2-dev \
+	libzstd-dev \
+	liblzma-dev \
+	libpcre2-dev
+
+WORKDIR "/usr/local/src"
+# Base R
+RUN wget https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz
+RUN tar zxvf "R-$R_VERSION.tar.gz"
+WORKDIR "R-$R_VERSION"
+RUN ./configure --enable-R-shlib #--with-blas --with-lapack #optional
+RUN make
+RUN make install
+
+# Copy scripts
+RUN mkdir /home/R
+WORKDIR "/home/R"
+COPY R/install_packages.sh install_packages.sh
+COPY R/r_requirements.txt r_requirements.txt
+# Copy cran mirror site details. Otherwise package installs fail
+COPY R/Rprofile.site /home/R/.Rprofile
+COPY R/Rprofile.site /etc/R/Rprofile.site
+
+RUN sh install_packages.sh r_requirements.txt
+
+FROM r_img AS py_img
+COPY py_requirements.txt py_requirements.txt
+RUN echo "[global]\nextra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
+RUN pip3 install -r py_requirements.txt
+
+# just don't want to rebuild everything
+RUN apt-get install --yes \
+  vim \
+  openssh-client \
+  openssh-server \
+	libgit2-dev
+RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+
+EXPOSE 18080 
+EXPOSE 22
+WORKDIR $SPARK_HOME

@@ -1,10 +1,12 @@
-FROM spark_base
+FROM spark-base
 
 ENV SPARK_MASTER_PORT=7077
 ENV SPARK_MASTER_WEBUI_PORT=8080
 ENV SPARK_MASTER_LOG=/spark/logs
 
-EXPOSE 7077 4040 8080
+EXPOSE 7077 4040 8080 18080
 
+COPY conf/spark-defaults.conf $SPARK_HOME/conf 
+COPY conf/spark-env.sh $SPARK_HOME/conf
 ENTRYPOINT $SPARK_HOME/bin/spark-class org.apache.spark.deploy.master.Master
 # ENTRYPOINT $SPARK_HOME/sbin/start-master.sh

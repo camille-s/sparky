@@ -1,11 +1,13 @@
-FROM spark_base
+FROM spark-base
 
 ENV MASTER_CONTAINER_NAME=spark-master
 # ENV SPARK_EXECUTOR_CORES=7
 
 # RUN pip3 install pandas numpy matplotlib 
 # pyarrow koalas
+COPY py_requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-EXPOSE 18080 8888
+EXPOSE 18080 
 
-WORKDIR /home/
+WORKDIR $SPARK_HOME

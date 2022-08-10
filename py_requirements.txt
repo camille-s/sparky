@@ -1,0 +1,4 @@
+Cython
+requests
+requests_toolbelt
+numpy

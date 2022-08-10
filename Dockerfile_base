@@ -1,5 +1,6 @@
 # based on tutorial https://github.com/sdesilva26/docker-spark/blob/master/docker/docker-compose.yml
-FROM debian:stable
+# FROM debian:stable
+FROM armr:latest
 
 RUN apt-get update \
   && apt-get install -y vim curl unzip openssl \
@@ -23,6 +24,7 @@ RUN curl -sL --retry 3 \
   && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
   && chown -R root:root $SPARK_HOME
 
+RUN echo "[global]\nextra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
 RUN pip3 install pyspark
 
 WORKDIR $SPARK_HOME
