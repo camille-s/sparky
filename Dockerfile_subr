@@ -33,7 +33,7 @@ RUN make
 RUN make install
 
 # Copy scripts
-RUN mkdir /home/R
+RUN mkdir -p /home/R
 WORKDIR "/home/R"
 COPY R/install_packages.sh install_packages.sh
 COPY R/r_requirements.txt r_requirements.txt
@@ -56,6 +56,6 @@ RUN apt-get install --yes \
 	libgit2-dev
 RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 
-EXPOSE 18080 
+EXPOSE 18080 4040
 EXPOSE 22
 WORKDIR $SPARK_HOME

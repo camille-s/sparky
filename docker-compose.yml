@@ -1,19 +1,25 @@
-version: "3"
+version: "3.9"
 services:
   spark-master:
     image: spark-master:latest
     hostname: boss
     ports:
-      - "4040:4040"
       - "8080:8080"
       - "7077:7077"
       - "18080:18080"
+      - "4040:4040"
     networks:
-      - spark-net
+      spark-net:
+        aliases:
+          - sprkmstr
     deploy:
       placement:
         constraints:
           - node.labels.role==manager
+    volumes:
+      - gfs2:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
   spark-worker:
     image: spark-worker:latest
     depends_on:
@@ -22,14 +28,21 @@ services:
       - "8081:8081"
     environment:
       - CORES=7
+    networks:
+      - spark-net
     deploy:
       placement:
         constraints:
           - node.labels.role==worker
       replicas: 3
-    networks:
-      - spark-net
+    volumes:
+      - gfs2:/data
+
 networks:
   spark-net:
     external: true
 
+volumes:
+  gfs2:
+    driver: glust
+    name: gfs2

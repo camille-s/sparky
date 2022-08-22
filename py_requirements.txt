@@ -2,3 +2,6 @@ Cython
 requests
 requests_toolbelt
 numpy
+pandas
+dateparser
+csvkit

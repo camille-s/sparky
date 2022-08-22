@@ -1,4 +1,4 @@
-FROM spark-base
+FROM spark-base AS spark-img
 
 ENV MASTER_CONTAINER_NAME=spark-master
 # ENV SPARK_EXECUTOR_CORES=7
@@ -8,6 +8,28 @@ ENV MASTER_CONTAINER_NAME=spark-master
 COPY py_requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-EXPOSE 18080 
+EXPOSE 18080 4040
 
-WORKDIR $SPARK_HOME
+# WORKDIR $SPARK_HOME
+
+######
+FROM spark-img AS zepp-img
+
+ENV ZEPPELIN_ADDR=0.0.0.0
+ENV ZEPPELIN_PORT=9999
+ENV ZEPPELIN_VERSION=0.10.1
+ENV ZEPPELIN_HOME=/opt/zeppelin 
+
+EXPOSE 9999
+
+# RUN apt-get update && apt-get install --yes \
+#   curl openjdk-11-jre
+
+RUN mkdir -p ${ZEPPELIN_HOME} && \
+	curl --output /tmp/zeppelin-${ZEPPELIN_VERSION}-bin-netinst.tgz https://dlcdn.apache.org/zeppelin/zeppelin-${ZEPPELIN_VERSION}/zeppelin-${ZEPPELIN_VERSION}-bin-netinst.tgz && \
+	tar xvzf /tmp/zeppelin-${ZEPPELIN_VERSION}-bin-netinst.tgz -C ${ZEPPELIN_HOME} --strip-components=1 
+	
+WORKDIR $ZEPPELIN_HOME
+RUN mkdir logs run
+	
+WORKDIR $SPARK_HOME 

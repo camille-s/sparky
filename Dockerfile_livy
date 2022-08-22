@@ -1,0 +1,24 @@
+FROM spark-base
+
+ENV MASTER_CONTAINER_NAME=spark-master
+ENV LIVY_VERSION=0.7.1
+ENV LIVY_HOME=/usr/livy-${LIVY_VERSION}
+ENV LIVY_DIR=apache-livy-${LIVY_VERSION}-incubating-bin
+
+EXPOSE 8998
+
+RUN mkdir -p ${LIVY_HOME}
+RUN curl --output  /tmp/livy.zip https://dlcdn.apache.org/incubator/livy/{$LIVY_VERSION}-incubating/${LIVY_DIR}.zip
+RUN unzip /tmp/livy.zip 
+RUN mv ${LIVY_DIR}/* ${LIVY_HOME}
+RUN mkdir ${LIVY_HOME}/logs
+
+WORKDIR ${LIVY_HOME}
+
+# RUN mkdir -p ${LIVY_HOME} && \
+# 	curl --output /tmp/livy/livy.zip https://dlcdn.apache.org/incubator/livy/{$LIVY_VERSION}-incubating/apache-livy-${LIVY_VERSION}-incubating-bin.zip && \
+# 	unzip /tmp/livy/livy.zip -d ${LIVY_HOME} && \
+# 	mkdir ${LIVY_HOME}/logs
+	# tar xvzf /tmp/zeppelin-${ZEPPELIN_VERSION}-bin-netinst.tgz -C ${ZEPPELIN_HOME} --strip-components=1 
+
+# ENTRYPOINT ${LIVY_HOME}/bin/livy-server start

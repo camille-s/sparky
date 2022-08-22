@@ -25,6 +25,7 @@ RUN curl -sL --retry 3 \
   && chown -R root:root $SPARK_HOME
 
 RUN echo "[global]\nextra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
-RUN pip3 install pyspark
+RUN pip3 install pyspark pex
+RUN R -q -e 'install.packages("sparklyr", repos = "https://cloud.r-project.org")'
 
 WORKDIR $SPARK_HOME
